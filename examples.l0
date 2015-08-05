@@ -16,4 +16,16 @@
     (reduce (LAMBDA (h t) (ADD h t)) 0 (QUOTE (1 2 3 4)))
     (LABEL mk-adder (LAMBDA (x) (LAMBDA (y) (ADD x y))))
     ((mk-adder 6) 7)
+
+    ;;; hc lol chuj bury
+    (LABEL revcps
+    	   (LAMBDA (xs k)
+		   (IF (EQ xs ())
+		       (k ())
+		       (revcps (CDR xs)
+			       (LAMBDA (x)
+				       (CONS (CAR xs)
+					     (k x)))))))
+
+    (revcps (QUOTE (derczyk likes lisp)) (LAMBDA (x) x))	   	   
 )
