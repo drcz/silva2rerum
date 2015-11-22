@@ -17,7 +17,11 @@
     ((? symbol?) '())
     (('EQ e1 e2) (append (gather-all-lambdas-in e1)
 			 (gather-all-lambdas-in e2)))
+    (('LT e1 e2) (append (gather-all-lambdas-in e1)
+			 (gather-all-lambdas-in e2)))
     (('ADD e1 e2) (append (gather-all-lambdas-in e1)
+			  (gather-all-lambdas-in e2)))
+    (('SUB e1 e2) (append (gather-all-lambdas-in e1)
 			  (gather-all-lambdas-in e2)))
     (('MUL e1 e2) (append (gather-all-lambdas-in e1)
 			  (gather-all-lambdas-in e2)))
@@ -58,7 +62,11 @@
        ((? symbol? s) `(,s))
        (('EQ e1 e2) (append (loop e1)
 			    (loop e2)))
+       (('LT e1 e2) (append (loop e1)
+			    (loop e2)))
        (('ADD e1 e2) (append (loop e1)
+			     (loop e2)))
+       (('SUB e1 e2) (append (loop e1)
 			     (loop e2)))
        (('MUL e1 e2) (append (loop e1)
 			     (loop e2)))
@@ -107,7 +115,11 @@
        ((? symbol?) an-expression)
        (('EQ e1 e2) `(EQ ,(loop e1)
 			 ,(loop e2)))
+       (('LT e1 e2) `(LT ,(loop e1)
+			 ,(loop e2)))
        (('ADD e1 e2) `(ADD ,(loop e1)
+			   ,(loop e2)))
+       (('SUB e1 e2) `(SUB ,(loop e1)
 			   ,(loop e2)))
        (('MUL e1 e2) `(MUL ,(loop e1)
 			   ,(loop e2)))
@@ -150,11 +162,11 @@
 		     lambdas-labels-mapping)))
     (fold-right (lambda ((p e) rest) `(IF ,p ,e ,rest)) '() conds))) ;; :D
   
-(define (assoc_ key alist)
+(define (assoc_ key alist)  
   (let ((val (assoc key alist)))
     (if val
 	(cdr val)
-	val)))
+	key #;val))) ;; KEY instead of #f, as it might be somehting defined in topenv.
 
 ;; this one we'll use to convert bound variables ("arguments") inside apply.
 (define (mk-vars-to-positions-mapping varlist source)
@@ -185,7 +197,11 @@
 	((? symbol? s) (assoc_ s vars-mapping))
 	(('EQ e1 e2) `(EQ ,(loop e1)
 			  ,(loop e2)))
+	(('LT e1 e2) `(LT ,(loop e1)
+			  ,(loop e2)))
 	(('ADD e1 e2) `(ADD ,(loop e1)
+			    ,(loop e2)))
+	(('SUB e1 e2) `(SUB ,(loop e1)
 			    ,(loop e2)))
 	(('MUL e1 e2) `(MUL ,(loop e1)
 			    ,(loop e2)))
@@ -216,7 +232,8 @@
 			 (match x
 			   (('LABEL v expr)
 			    `(LABEL ,v ,(replace-lambdas-with-labels expr all-lambdas l2l)))
-			   (something (replace-lambdas-with-labels something all-lambdas l2l)))))
+			   (something
+			    (replace-lambdas-with-labels something all-lambdas l2l)))))
 	 (new-program (map the-replacer program))
 	 (apply (build-apply all-lambdas l2l)))
     (cons apply new-program)))
