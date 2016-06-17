@@ -1,0 +1,4 @@
+[ (! mk-adder (^ (x) (^ (y) (+ x y))))
+  (! map (^ (f l) (if (= l ()) () (cons (f (car l)) (map f (cdr l))))))	  
+  (! main (^ (xs) (map (mk-adder 3) xs)))
+]

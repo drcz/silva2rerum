@@ -1,0 +1,3 @@
+[ (! map (^ (f l) (if (= l ()) () (cons (f (car l)) (map f (cdr l))))))
+  (! main (^ (x0) (map (^ (x) (* x x)) x0)))
+]
