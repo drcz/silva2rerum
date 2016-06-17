@@ -1,6 +1,8 @@
-# silva2rerum
+# silva->rerum
+### aka lolowa peniawka
 
-older-crap -- avoid it;
+older-crap/ -- just avoid it;
 
-drcz2fcl -- crude prototype compiler from drcz2 (minimal lexical lisp, cf drcz2-fast.scm) to FCL (cf fcl.scm).
+drcz2fcl/ -- crude prototype compiler from [minimal lexical lisp](drcz2fcl/drcz2-fast.scm) to [FCL](drcz2fcl/fcl.scm). Check README inside.
 
+_to be used with guile scheme._
